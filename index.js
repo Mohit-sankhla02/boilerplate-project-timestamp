@@ -31,10 +31,15 @@ app.get("/api/:date", function (req, res) {
   if (!d.includes('-')) {
     d = parseInt(d);
   }
-  let date = new Date(d);
-  const unixDate = date.getTime();
-  date = date.toUTCString();
-  res.json({unix: unixDate, utc: date});
+  try {
+    const date = new Date(d);
+    const unixDate = date.getTime();
+    date = date.toUTCString();
+    res.json({ unix: unixDate, utc: date });
+  } catch (error) {
+    res.json({error: "Invalid Date"})
+  }
+  
 });
 
 // listen for requests :)
