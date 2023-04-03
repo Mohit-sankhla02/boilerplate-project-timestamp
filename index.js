@@ -28,18 +28,28 @@ app.get('/api', (req,res) => {
 // your first API endpoint... 
 app.get("/api/:date", function (req, res) {
   let d = req.params.date;
-  if (!d.includes('-')) {
-    d = parseInt(d);
+  let flag = true;
+  for (i=0;i<d.length;i++) {
+    if (d[i] >= '0' && d[i] <='9') {
+      continue;
+    } else {
+      flag = false;
+      break;
+    }
   }
-  try {
-    const date = new Date(d);
-    const unixDate = date.getTime();
-    date = date.toUTCString();
-    res.json({ unix: unixDate, utc: date });
-  } catch (error) {
-    res.json({error: "Invalid Date"})
+  let final_d = d;
+  if (flag === true) {
+    final_d = parseInt(d);
   }
-  
+  let date = new Date(final_d);
+  const unixDate = date.getTime();
+  date = date.toUTCString();
+  if (date == "Invalid Date") {
+    res.json({error: date});
+    return;
+  }
+  res.json({ unix: unixDate, utc: date });
+  res.json({error: "Invalid Date"})
 });
 
 // listen for requests :)
